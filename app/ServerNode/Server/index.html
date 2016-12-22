@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js">
+    </script>
+    <script type="text/javascript" src="/socket.io/socket.io.js">
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var socket = io.connect("http://localhost:3000/");
+
+            socket.emit("new user", "khoapham.vn");
+
+            socket.emit("new user", $username.val(), function(data) {
+                if (data) {
+
+                } else {
+
+                }
+            });
+
+            socket.on("server-gui-ve", function(data) {
+                //io.sockets.emit("new message",{msg:data});
+                alert(data);
+            })
+
+            socket.on("disconnect", function(data) {
+                if (!socket.username) return;
+                else
+                    usernames.splice(usernames.indexOf(socket.username), 1);
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
