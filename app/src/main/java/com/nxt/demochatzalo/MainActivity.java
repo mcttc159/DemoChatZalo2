@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         mSocket.on("ketquaDangKyUn", onNewMessage_DangKyUsername);
         mSocket.on("server-gui-username", onNewMessage_DanhSachUsername);
-
+//
 
 
     }
