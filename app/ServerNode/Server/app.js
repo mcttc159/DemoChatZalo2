@@ -13,7 +13,7 @@ var mangUsername = [];
 
 io.sockets.on('connection', function(socket) {
 
-    console.log("Co nguoi connect "+socket.id);
+    console.log("Co nguoi connect " + socket.id);
 
     socket.on("client-gui-username", function(data) {
         var ketqua = false;
@@ -22,9 +22,11 @@ io.sockets.on('connection', function(socket) {
             ketqua = false;
         } else {
             mangUsername.push(data);
-            socket.un=data;
+            socket.un = data;
             ketqua = true;
-            io.sockets.emit('server-gui-username',{danhsach:mangUsername});
+            io.sockets.emit('server-gui-username', {
+                danhsach: mangUsername
+            });
 
         }
         socket.emit("ketquaDangKyUn", {
@@ -33,5 +35,11 @@ io.sockets.on('connection', function(socket) {
 
 
     });
+
+    socket.on("client-gui-tinchat", function(ndungchat) {
+
+      console.log(ndungchat);
+    });
+
 
 });

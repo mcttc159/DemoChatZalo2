@@ -26,8 +26,11 @@ public class MainActivity extends AppCompatActivity {
     EditText editTextUsername;
     Button buttonDangNhap;
     ListView listViewUsername;
+    ListView listViewChat;
+    Button buttonChat;
 
     ArrayList<String> mangUsername;
+    ArrayList<String>mangChat;
 
     private Socket mSocket;
 
@@ -46,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         editTextUsername = (EditText) findViewById(R.id.editTextUsername);
         buttonDangNhap = (Button) findViewById(R.id.buttonDangNhap);
-
+        buttonChat=(Button)findViewById(R.id.buttonChat);
 
         buttonDangNhap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,10 +57,24 @@ public class MainActivity extends AppCompatActivity {
                 mSocket.emit("client-gui-username", editTextUsername.getText().toString());
             }
         });
+        buttonChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSocket.emit("client-gui-tinchat",editTextUsername.getText().toString());
+            }
+        });
 
         mSocket.on("ketquaDangKyUn", onNewMessage_DangKyUsername);
         mSocket.on("server-gui-username", onNewMessage_DanhSachUsername);
 //
+
+
+        listViewChat=(ListView)findViewById(R.id.listViewChat);
+        mangChat=new ArrayList<>();
+        mangChat.add("T:hello!");
+        ArrayAdapter adapter=new ArrayAdapter(MainActivity.this,android.R.layout.simple_list_item_1,mangChat);
+        listViewChat.setAdapter(adapter);
+
 
 
     }
