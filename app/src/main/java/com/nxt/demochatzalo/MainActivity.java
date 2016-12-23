@@ -30,13 +30,13 @@ public class MainActivity extends AppCompatActivity {
     Button buttonChat;
 
     ArrayList<String> mangUsername;
-    ArrayList<String>mangChat;
+    ArrayList<String> mangChat;
 
     private Socket mSocket;
 
     {
         try {
-            mSocket = IO.socket("http://10.9.1.39:3000");
+            mSocket = IO.socket("https://nxt-chat.herokuapp.com/");
         } catch (URISyntaxException e) {
         }
     }
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         editTextUsername = (EditText) findViewById(R.id.editTextUsername);
         buttonDangNhap = (Button) findViewById(R.id.buttonDangNhap);
-        buttonChat=(Button)findViewById(R.id.buttonChat);
+        buttonChat = (Button) findViewById(R.id.buttonChat);
 
         buttonDangNhap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,24 +60,45 @@ public class MainActivity extends AppCompatActivity {
         buttonChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mSocket.emit("client-gui-tinchat",editTextUsername.getText().toString());
+                mSocket.emit("client-gui-tinchat", editTextUsername.getText().toString());
             }
         });
 
         mSocket.on("ketquaDangKyUn", onNewMessage_DangKyUsername);
         mSocket.on("server-gui-username", onNewMessage_DanhSachUsername);
+        mSocket.on("server-gui-tinchat", onNewMessage_DanhSachTinChat);
 //
 
 
-        listViewChat=(ListView)findViewById(R.id.listViewChat);
-        mangChat=new ArrayList<>();
-        mangChat.add("T:hello!");
-        ArrayAdapter adapter=new ArrayAdapter(MainActivity.this,android.R.layout.simple_list_item_1,mangChat);
-        listViewChat.setAdapter(adapter);
-
+        mangChat = new ArrayList<>();
+        // mangChat.add("T:hello!");
 
 
     }
+
+    private Emitter.Listener onNewMessage_DanhSachTinChat = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    String ndung;
+                    try {
+                        ndung = data.getString("tinchat");
+
+                        mangChat.add(ndung);
+                        listViewChat = (ListView) findViewById(R.id.listViewChat);
+                        ArrayAdapter adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, mangChat);
+                        listViewChat.setAdapter(adapter);
+                    } catch (JSONException e) {
+                        return;
+                    }
+
+                }
+            });
+        }
+    };
 
 
     private Emitter.Listener onNewMessage_DanhSachUsername = new Emitter.Listener() {
@@ -93,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
                         listViewUsername = (ListView) findViewById(R.id.listViewUsername);
                         mangUsername = new ArrayList<>();
-                        for(int i=0;i<danhsach.length();i++){
+                        for (int i = 0; i < danhsach.length(); i++) {
                             mangUsername.add(danhsach.get(i).toString());
                         }
 
